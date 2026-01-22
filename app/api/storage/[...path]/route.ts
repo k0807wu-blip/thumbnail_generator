@@ -24,6 +24,8 @@ export async function GET(
         'Content-Type': 'image/png',
         'Cache-Control': 'public, max-age=31536000, immutable',
         'Content-Length': file.length.toString(),
+        'Accept-Ranges': 'bytes',
+        'X-Content-Type-Options': 'nosniff',
       },
     });
   } catch (error) {

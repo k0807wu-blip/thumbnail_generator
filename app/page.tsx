@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { styles } from '@/lib/styles';
 import { GenerateParams } from '@/lib/types';
 
@@ -217,16 +216,13 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Array.isArray(jobStatus.outputPath) ? (
                   jobStatus.outputPath.map((path: string, index: number) => (
-                    <div key={index} className="relative group">
-                      <Image
+                    <div key={index} className="relative group w-full">
+                      <img
                         src={path}
                         alt={`Thumbnail ${index + 1}`}
-                        width={1280}
-                        height={720}
-                        className="w-full rounded-lg shadow-md"
-                        unoptimized
-                        loading="lazy"
-                        priority={index === 0}
+                        className="w-full h-auto rounded-lg shadow-md object-contain"
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
                         <button
@@ -239,16 +235,13 @@ export default function Home() {
                     </div>
                   ))
                 ) : (
-                  <div className="relative group">
-                    <Image
+                  <div className="relative group w-full">
+                    <img
                       src={jobStatus.outputPath}
                       alt="Thumbnail"
-                      width={1280}
-                      height={720}
-                      className="w-full rounded-lg shadow-md"
-                      unoptimized
-                      loading="lazy"
-                      priority
+                      className="w-full h-auto rounded-lg shadow-md object-contain"
+                      loading="eager"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
                       <button
