@@ -77,15 +77,11 @@ export async function overlayText({
   }
 
   // 完整的 SVG（指定 UTF-8 編碼和字體）
+  // 注意：Sharp 不支援外部字體載入，所以使用系統字體
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
-    <svg width="${style.size.width}" height="${style.size.height}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap');
-        </style>
-      </defs>
-      ${svgParts.join('\n')}
-    </svg>`.trim();
+<svg width="${style.size.width}" height="${style.size.height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+${svgParts.join('\n')}
+</svg>`;
 
   // 使用 sharp 合成（指定 UTF-8 編碼）
   const result = await sharp(backgroundBuffer)
