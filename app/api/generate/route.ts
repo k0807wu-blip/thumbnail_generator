@@ -65,27 +65,49 @@ async function processGeneration(jobId: string, params: GenerateParams) {
 
     // 確保輸出目錄存在
     const outputDir = join(process.cwd(), 'storage', 'outputs');
-    await mkdir(outputDir, { recursive: true });
+    try {
+      await mkdir(outputDir, { recursive: true });
+    } catch (error) {
+      console.error('Failed to create output directory:', error);
+      throw new Error(`無法建立輸出目錄: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
 
     // 生成指定數量的圖片
     for (let i = 0; i < params.count; i++) {
-      // 1. 生成背景
-      const backgroundBuffer = await generateBackground(style);
+      try {
+        // 1. 生成背景
+        const backgroundBuffer = await generateBackground(style);
 
-      // 2. 疊加文字
-      const finalImage = await overlayText({
-        backgroundBuffer,
-        title: params.title,
-        subtitle: params.subtitle,
-        style,
-      });
+        // 2. 疊加文字
+        const finalImage = await overlayText({
+          backgroundBuffer,
+          title: params.title,
+          subtitle: params.subtitle,
+          style,
+        });
 
-      // 3. 儲存檔案
-      const filename = `${jobId}_${i + 1}.png`;
-      const filepath = join(outputDir, filename);
-      await writeFile(filepath, finalImage);
+        // 3. 儲存檔案
+        const filename = `${jobId}_${i + 1}.png`;
+        const filepath = join(outputDir, filename);
+        
+        try {
+          await writeFile(filepath, finalImage);
+          console.log(`Image saved: ${filepath}`);
+        } catch (writeError) {
+          console.error(`Failed to write file ${filepath}:`, writeError);
+          throw new Error(`無法儲存檔案: ${writeError instanceof Error ? writeError.message : 'Unknown error'}`);
+        }
 
-      outputPaths.push(`/api/storage/outputs/${filename}`);
+        // 4. 確認檔案路徑正確
+        outputPaths.push(`/api/storage/outputs/${filename}`);
+      } catch (imageError) {
+        console.error(`Failed to generate image ${i + 1}:`, imageError);
+        // 繼續生成其他圖片，不中斷整個流程
+        if (i === 0) {
+          // 如果第一張圖片失敗，拋出錯誤
+          throw imageError;
+        }
+      }
     }
 
     // 更新狀態為 completed

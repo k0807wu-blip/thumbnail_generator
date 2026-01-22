@@ -2,6 +2,8 @@
 const nextConfig = {
   images: {
     unoptimized: true,
+    // 允許從 API 路由載入圖片
+    remotePatterns: [],
   },
   experimental: {
     serverActions: {
