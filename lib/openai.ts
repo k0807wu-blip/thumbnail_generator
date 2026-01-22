@@ -37,7 +37,7 @@ export async function generateBackground(
       n: 1,
     });
 
-    if (!response.data[0]?.b64_json) {
+    if (!response.data || !response.data[0]?.b64_json) {
       throw new Error('No image data returned from OpenAI');
     }
 

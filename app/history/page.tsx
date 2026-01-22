@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 interface Job {
@@ -110,10 +111,13 @@ export default function HistoryPage() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                     {job.outputPath.map((path, index) => (
                       <div key={index} className="relative group">
-                        <img
+                        <Image
                           src={path}
                           alt={`Thumbnail ${index + 1}`}
+                          width={1280}
+                          height={720}
                           className="w-full rounded-lg shadow-md"
+                          unoptimized
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
                           <button

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { styles } from '@/lib/styles';
 import { GenerateParams } from '@/lib/types';
 
@@ -217,10 +218,13 @@ export default function Home() {
                 {Array.isArray(jobStatus.outputPath) ? (
                   jobStatus.outputPath.map((path: string, index: number) => (
                     <div key={index} className="relative group">
-                      <img
+                      <Image
                         src={path}
                         alt={`Thumbnail ${index + 1}`}
+                        width={1280}
+                        height={720}
                         className="w-full rounded-lg shadow-md"
+                        unoptimized
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
                         <button
@@ -234,10 +238,13 @@ export default function Home() {
                   ))
                 ) : (
                   <div className="relative group">
-                    <img
+                    <Image
                       src={jobStatus.outputPath}
                       alt="Thumbnail"
+                      width={1280}
+                      height={720}
                       className="w-full rounded-lg shadow-md"
+                      unoptimized
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
                       <button
