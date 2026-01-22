@@ -8,21 +8,12 @@ const nextConfig = {
       bodySizeLimit: '10mb',
     },
   },
-  webpack: (config, { isServer }) => {
-    // 設定路徑別名
+  // 簡化 webpack 配置，只保留必要的路徑別名
+  webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': __dirname,
     };
-    
-    // 確保 PostCSS 配置正確載入
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-      };
-    }
-    
     return config;
   },
 }
