@@ -1,12 +1,25 @@
 import OpenAI from 'openai';
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error('OPENAI_API_KEY is not set');
+// 延遲初始化，避免建置時檢查環境變數
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not set');
+  }
+  return new OpenAI({
+    apiKey,
+  });
 }
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// 使用 lazy initialization
+let _openai: OpenAI | null = null;
+
+export function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = getOpenAIClient();
+  }
+  return _openai;
+}
 
 /**
  * 生成背景圖（無文字）
@@ -28,6 +41,7 @@ export async function generateBackground(
     }
     fullPrompt += ', no text, no letters, no watermark, no words, professional youtube thumbnail design';
     
+    const openai = getOpenAI();
     const response = await openai.images.generate({
       model: 'dall-e-3',
       prompt: fullPrompt,
