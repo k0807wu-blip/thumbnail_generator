@@ -14,6 +14,7 @@ export async function GET(
       headers: {
         'Content-Type': 'image/png',
         'Cache-Control': 'public, max-age=31536000, immutable',
+        'Content-Length': file.length.toString(),
       },
     });
   } catch (error) {

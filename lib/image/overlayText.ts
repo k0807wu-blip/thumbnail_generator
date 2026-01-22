@@ -46,15 +46,15 @@ export async function overlayText({
     const fontWeight = textConfig.fontWeight || 'bold';
     
     if (textConfig.shadow) {
-      // 先繪製陰影（偏移位置）
+      // 先繪製陰影（偏移位置，指定字體族）
       svgParts.push(
-        `<text x="${textConfig.x + 2}" y="${y + 2}" font-size="${textConfig.mainSize}" fill="${shadowColor}" font-weight="${fontWeight}" opacity="${shadowOpacity}">${escapeXml(line)}</text>`
+        `<text x="${textConfig.x + 2}" y="${y + 2}" font-size="${textConfig.mainSize}" fill="${shadowColor}" font-weight="${fontWeight}" opacity="${shadowOpacity}" font-family="'Noto Sans TC', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif">${escapeXml(line)}</text>`
       );
     }
     
-    // 再繪製文字本身
+    // 再繪製文字本身（指定字體族）
     svgParts.push(
-      `<text x="${textConfig.x}" y="${y}" font-size="${textConfig.mainSize}" fill="${textConfig.color}" font-weight="${fontWeight}">${escapeXml(line)}</text>`
+      `<text x="${textConfig.x}" y="${y}" font-size="${textConfig.mainSize}" fill="${textConfig.color}" font-weight="${fontWeight}" font-family="'Noto Sans TC', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif">${escapeXml(line)}</text>`
     );
   });
 
@@ -64,30 +64,34 @@ export async function overlayText({
     const fontWeight = textConfig.fontWeight || 'bold';
     
     if (textConfig.shadow) {
-      // 先繪製陰影（偏移位置）
+      // 先繪製陰影（偏移位置，指定字體族）
       svgParts.push(
-        `<text x="${textConfig.x + 2}" y="${subtitleY + 2}" font-size="${textConfig.subSize}" fill="${shadowColor}" font-weight="${fontWeight}" opacity="${shadowOpacity * 0.8}">${escapeXml(subtitle)}</text>`
+        `<text x="${textConfig.x + 2}" y="${subtitleY + 2}" font-size="${textConfig.subSize}" fill="${shadowColor}" font-weight="${fontWeight}" opacity="${shadowOpacity * 0.8}" font-family="'Noto Sans TC', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif">${escapeXml(subtitle)}</text>`
       );
     }
     
-    // 再繪製文字本身
+    // 再繪製文字本身（指定字體族）
     svgParts.push(
-      `<text x="${textConfig.x}" y="${subtitleY}" font-size="${textConfig.subSize}" fill="${textConfig.color}" font-weight="${fontWeight}" opacity="0.95">${escapeXml(subtitle)}</text>`
+      `<text x="${textConfig.x}" y="${subtitleY}" font-size="${textConfig.subSize}" fill="${textConfig.color}" font-weight="${fontWeight}" opacity="0.95" font-family="'Noto Sans TC', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif">${escapeXml(subtitle)}</text>`
     );
   }
 
-  // 完整的 SVG
-  const svg = `
+  // 完整的 SVG（指定 UTF-8 編碼和字體）
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
     <svg width="${style.size.width}" height="${style.size.height}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap');
+        </style>
+      </defs>
       ${svgParts.join('\n')}
-    </svg>
-  `.trim();
+    </svg>`.trim();
 
-  // 使用 sharp 合成
+  // 使用 sharp 合成（指定 UTF-8 編碼）
   const result = await sharp(backgroundBuffer)
     .composite([
       {
-        input: Buffer.from(svg),
+        input: Buffer.from(svg, 'utf-8'),
         top: 0,
         left: 0,
       },

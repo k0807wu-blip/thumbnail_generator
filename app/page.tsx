@@ -225,6 +225,8 @@ export default function Home() {
                         height={720}
                         className="w-full rounded-lg shadow-md"
                         unoptimized
+                        loading="lazy"
+                        priority={index === 0}
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
                         <button
@@ -245,6 +247,8 @@ export default function Home() {
                       height={720}
                       className="w-full rounded-lg shadow-md"
                       unoptimized
+                      loading="lazy"
+                      priority
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity rounded-lg flex items-center justify-center">
                       <button
